@@ -4,22 +4,27 @@
   <meta charset="UTF-8" />
   <title>Crônicas de Baudson</title>
   <style>
-  @font-face {
-  font-family: 'CC Wild Words';
-  src: url('CCWildWords.ttf') format('truetype');
+    @font-face {
+      font-family: 'CC Wild Words';
+      src: url('CCWildWords.ttf') format('truetype');
     }
+
     body {
-     font-family: 'CC Wild Words', Arial, sans-serif;
-     margin: 20px;
+      font-family: 'CC Wild Words', Arial, sans-serif;
+      margin: 20px;
+      background-color: #deb900; /* amarelo claro tipo papel */
     }
+
     .livro-lista {
       display: flex;
       gap: 20px;
     }
+
     .livro-item {
       cursor: pointer;
       text-align: center;
     }
+
     .livro-item img {
       width: 120px;
       height: 180px;
@@ -27,6 +32,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     #leitor {
       margin-top: 40px;
       height: 600px;
@@ -35,16 +41,22 @@
       border: 1px solid #ccc;
       padding: 10px;
       text-align: center;
+      background-color: white;
     }
+
     #leitor img {
       max-width: 100%;
       height: auto;
+      margin-bottom: 10px;
     }
-    #fechar {
+
+    #fechar,
+    #proximo {
       margin-top: 10px;
       cursor: pointer;
       color: blue;
       text-decoration: underline;
+      display: block;
     }
   </style>
 </head>
@@ -53,29 +65,65 @@
   <h1>Crônicas de Baudson</h1>
 
   <div class="livro-lista">
-    <div class="livro-item" onclick="abrirLivro('livro1.png')">
-      <img src="capa1.png" alt="Capa do Livro 1" />
+    <div class="livro-item" onclick="abrirLivro('livro1', 'images/capa1.png', 1)">
+      <img src="images/capa1.png" alt="Capa do Livro 1" />
       <p>Livro 1</p>
     </div>
-    <div class="livro-item" onclick="abrirLivro('livro2.png')">
-      <img src="capa2.png" alt="Capa do Livro 2" />
+    <div class="livro-item" onclick="abrirLivro('livro2', 'images/capa2.png', 1)">
+      <img src="images/capa2.png" alt="Capa do Livro 2" />
       <p>Livro 2</p>
     </div>
   </div>
 
   <div id="leitor">
-    <img id="imagemLivro" src="" alt="Livro" />
+    <div id="conteudoLivro"></div>
+    <div id="proximo" onclick="proximoCapitulo()">➡️ Próximo capítulo</div>
     <div id="fechar" onclick="fecharLivro()">Fechar livro</div>
   </div>
 
   <script>
-    function abrirLivro(imagem) {
-      document.getElementById('imagemLivro').src = imagem;
+    let livroAtual = '';
+    let capaAtual = '';
+    let capituloAtual = 1;
+
+    function abrirLivro(nomeLivro, capa, capitulo) {
+      livroAtual = nomeLivro;
+      capaAtual = capa;
+      capituloAtual = capitulo;
+      atualizarImagem();
       document.getElementById('leitor').style.display = 'block';
     }
+
+    function atualizarImagem() {
+      const conteudo = document.getElementById('conteudoLivro');
+      conteudo.innerHTML = '';
+
+      // Mostra a capa só no primeiro capítulo
+      if (capituloAtual === 1) {
+        const capaImg = document.createElement('img');
+        capaImg.src = capaAtual;
+        capaImg.alt = 'Capa do livro';
+        conteudo.appendChild(capaImg);
+      }
+
+      // Mostra o capítulo
+      const capituloImg = document.createElement('img');
+      capituloImg.src = `images/${livroAtual}-cap${capituloAtual}.png`;
+      capituloImg.alt = `Capítulo ${capituloAtual}`;
+      conteudo.appendChild(capituloImg);
+    }
+
+    function proximoCapitulo() {
+      capituloAtual++;
+      atualizarImagem();
+    }
+
     function fecharLivro() {
       document.getElementById('leitor').style.display = 'none';
-      document.getElementById('imagemLivro').src = '';
+      document.getElementById('conteudoLivro').innerHTML = '';
+      capituloAtual = 1;
+      livroAtual = '';
+      capaAtual = '';
     }
   </script>
 
